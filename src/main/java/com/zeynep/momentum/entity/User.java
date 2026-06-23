@@ -1,6 +1,5 @@
-package com.zeynep.momentum.common.entity;
+package com.zeynep.momentum.entity;
 
-import com.zeynep.momentum.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,18 +10,18 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User extends BaseEntity{
+public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
     private String password;
 
     private String firstName;
 
     private String lastName;
+
 }

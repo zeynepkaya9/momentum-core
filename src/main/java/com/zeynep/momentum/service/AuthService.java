@@ -1,29 +1,28 @@
 package com.zeynep.momentum.service;
 
-import com.zeynep.momentum.dto.UserRequestDto;
-import com.zeynep.momentum.dto.UserResponseDto;
+import com.zeynep.momentum.dto.RegisterRequest;
+import com.zeynep.momentum.dto.AuthResponse;
 import com.zeynep.momentum.entity.User;
 import com.zeynep.momentum.repository.UserRepository;
+import com.zeynep.momentum.exception.EmailAlreadyExistsException;
 
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.zeynep.momentum.exception.EmailAlreadyExistsException;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class AuthService {
 
     private final UserRepository userRepository;
-
     private final PasswordEncoder passwordEncoder;
 
-    public UserResponseDto createUser(UserRequestDto request) {
-
+    public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new EmailAlreadyExistsException("Email already exists");
         }
+
         User user = User.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
@@ -33,11 +32,14 @@ public class UserService {
 
         User savedUser = userRepository.save(user);
 
-        return UserResponseDto.builder()
-                .id(savedUser.getId())
+        return AuthResponse.builder()
+                .userId(savedUser.getId())
                 .email(savedUser.getEmail())
-                .firstName(savedUser.getFirstName())
-                .lastName(savedUser.getLastName())
+                .message("Registration successfull")
                 .build();
+
     }
+
+
+
 }
